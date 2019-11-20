@@ -4,3 +4,4 @@ flask-wtf==0.14.2
 wtforms
 boto3
 flask-dynamo==0.1.2
+zappa

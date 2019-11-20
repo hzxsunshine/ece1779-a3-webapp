@@ -13,7 +13,7 @@ def get_user_by_username(username):
 def create_user(username, password):
     dynamodb = current_app.extensions['dynamo']
     response = dynamodb.tables['users'].put_item(
-      data={
+      Item={
         'username': username,
         'password': password
       })

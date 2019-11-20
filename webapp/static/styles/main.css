@@ -92,7 +92,6 @@ a.article-title:hover {
 }
 
 body {
-  background-image: url('../images/background.jpg');
   /*background-position: center center;*/
   background-size: cover;
 }

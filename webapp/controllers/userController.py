@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, redirect, url_for, request, session
 from webapp.services import userService
-from sqlalchemy.exc import IntegrityError
 from flask import current_app
 
 
@@ -17,7 +16,7 @@ USER_EXISTED_ERROR = "User with username '{}' already exists."
 @users.route('/login', methods=['GET', 'POST'])
 def login():
     if 'username' in session:
-        return 'Hello World'
+        return redirect(url_for('main.home'))
     form = userService.LoginForm()
     if form.validate_on_submit():
         authenticated_user = userService.is_authenticated(username=form.username.data, password=form.password.data)
@@ -38,11 +37,13 @@ def login():
 @users.route('/register', methods=['GET', 'POST'])
 def register():
     form = userService.CreateUserForm()
-    if 'username' not in session:
+    if 'username' in session:
         return redirect(url_for('main.home'))
     if form.validate_on_submit():
-        user_with_username = userService.get_user_by_username(username=form.username.data)
-
+        response = userService.get_user_by_username(username=form.username.data)
+        user_with_username = None
+        if 'Item' in response and 'username' in response['Item']:
+            user_with_username = response['Item']['username']
         if user_with_username:
             current_app.logger.error("----------409 Registration conflict: {} already exists----------"
                                      .format(form.username.data))
@@ -54,7 +55,7 @@ def register():
                 login_form = userService.LoginForm()
                 current_app.logger.info("----------User '{}' register successful----------".format(form.username.data))
                 return render_template(LOGIN_PAGE, title='Login', form=login_form, message=REG_SUCCESS_MSG)
-            except IntegrityError as e:
+            except Exception as e:
                 current_app.logger.error("----------Database action error: {}----------".format(str(e)))
                 return render_template(REGISTER_PAGE, title='Register', form=form, error=INTERNAL_ERROR_MSG), 500
     else:

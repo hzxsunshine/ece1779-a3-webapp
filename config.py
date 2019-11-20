@@ -19,7 +19,7 @@ class Config(object):
        }
     ]
 
-    DYNAMO_ENABLE_LOCAL = True
-    DYNAMO_LOCAL_HOST = 'localhost'
-    DYNAMO_LOCAL_PORT = 8000
+    # DYNAMO_ENABLE_LOCAL = True
+    # DYNAMO_LOCAL_HOST = 'localhost'
+    # DYNAMO_LOCAL_PORT = 8000
 

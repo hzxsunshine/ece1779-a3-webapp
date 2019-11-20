@@ -11,7 +11,7 @@ def create_app():
     app.config.from_object("config.Config")
     models.init_app(app)
     controllers.init_app(app)
-    handler = RotatingFileHandler(app.root_path + app.config["LOGGING_FILE_PATH"],
+    handler = RotatingFileHandler("/tmp/" + app.config["LOGGING_FILE_PATH"],
                                   maxBytes=10*1024*1024, backupCount=5)
     handler.setLevel(logging.INFO)
     handler.setFormatter(logging.Formatter('%(asctime)s %(levelname)-8s %(message)s'))

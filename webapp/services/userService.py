@@ -20,7 +20,6 @@ class LoginForm(FlaskForm):
 
 
 def get_user_by_username(username):
-    print(userRepository.get_user_by_username(username))
     return userRepository.get_user_by_username(username)
 
 
