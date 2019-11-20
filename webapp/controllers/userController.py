@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request
-from flask_login import login_user, current_user, logout_user
+from flask import Blueprint, render_template, redirect, url_for, request, session
 from webapp.services import userService
 from sqlalchemy.exc import IntegrityError
 from flask import current_app
@@ -17,16 +16,14 @@ USER_EXISTED_ERROR = "User with username '{}' already exists."
 
 @users.route('/login', methods=['GET', 'POST'])
 def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('main.home'))
+    if 'username' in session:
+        return 'Hello World'
     form = userService.LoginForm()
     if form.validate_on_submit():
         authenticated_user = userService.is_authenticated(username=form.username.data, password=form.password.data)
         if authenticated_user:
-            login_user(authenticated_user, remember=form.remember_user.data)
-            next_page = request.args.get('next')
-            current_app.logger.info("----------User '{}' login success !----------".format(authenticated_user.username))
-            return redirect(next_page) if next_page else redirect(url_for('main.home'))
+            session['username'] = form.username.data
+            return redirect(url_for('main.home'))
         else:
             current_app.logger.error("----------User '{}' Login failed, username/password do not match record----------"
                                      .format(form.username.data))
@@ -41,7 +38,7 @@ def login():
 @users.route('/register', methods=['GET', 'POST'])
 def register():
     form = userService.CreateUserForm()
-    if current_user.is_authenticated:
+    if 'username' not in session:
         return redirect(url_for('main.home'))
     if form.validate_on_submit():
         user_with_username = userService.get_user_by_username(username=form.username.data)
@@ -53,9 +50,9 @@ def register():
                                    error=USER_EXISTED_ERROR.format(form.username.data)), 409
         else:
             try:
-                user = userService.create_user(username=form.username.data, password=form.password.data)
+                userService.create_user(username=form.username.data, password=form.password.data)
                 login_form = userService.LoginForm()
-                current_app.logger.info("----------User '{}' register successful----------".format(user.username))
+                current_app.logger.info("----------User '{}' register successful----------".format(form.username.data))
                 return render_template(LOGIN_PAGE, title='Login', form=login_form, message=REG_SUCCESS_MSG)
             except IntegrityError as e:
                 current_app.logger.error("----------Database action error: {}----------".format(str(e)))
@@ -69,5 +66,5 @@ def register():
 
 @users.route('/logout')
 def logout():
-    logout_user()
+    session.pop('username', None)
     return redirect(url_for('users.login'))

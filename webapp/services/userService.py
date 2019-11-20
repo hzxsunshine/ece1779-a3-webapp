@@ -20,12 +20,14 @@ class LoginForm(FlaskForm):
 
 
 def get_user_by_username(username):
+    print(userRepository.get_user_by_username(username))
     return userRepository.get_user_by_username(username)
 
 
 def is_authenticated(username, password):
     user = userRepository.get_user_by_username(username)
-    if user and security.check_password_hash(user.password, password):
+    if user and security.check_password_hash(user['Item']['password'], password):
+        print(user)
         return user
     else:
         return None
@@ -33,7 +35,7 @@ def is_authenticated(username, password):
 
 def create_user(username, password):
     hashed_password = security.generate_password_hash(password, method='pbkdf2:sha1', salt_length=8)
-    return userRepository.create_user(username, hashed_password)
+    userRepository.create_user(username, hashed_password)
 
 
 

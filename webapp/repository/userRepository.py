@@ -1,13 +1,20 @@
-from webapp.models.user import User
-from webapp.models.base import db
+from flask import current_app
 
 
 def get_user_by_username(username):
-    return User.query.filter_by(username=username).first()
+    dynamodb = current_app.extensions['dynamo']
+    return dynamodb.tables['users'].get_item(
+      Key={
+        'username': username
+      }
+    )
 
 
 def create_user(username, password):
-    user = User(username, password)
-    db.session.add(user)
-    db.session.commit()
-    return user
+    dynamodb = current_app.extensions['dynamo']
+    response = dynamodb.tables['users'].put_item(
+      data={
+        'username': username,
+        'password': password
+      })
+    print(response)

@@ -1,7 +1,6 @@
 # Flask Framework
 Flask==1.1.1
-flask-sqlalchemy==2.4.1
-sqlalchemy
 flask-wtf==0.14.2
 wtforms
-flask-login==0.4.1
+boto3
+flask-dynamo==0.1.2
