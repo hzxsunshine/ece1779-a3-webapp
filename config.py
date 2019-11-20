@@ -16,6 +16,24 @@ class Config(object):
        'KeySchema': [dict(AttributeName='username', KeyType='HASH')],
        'AttributeDefinitions': [dict(AttributeName='username', AttributeType='S')],
        'ProvisionedThroughput': dict(ReadCapacityUnits=5, WriteCapacityUnits=5)
+       },
+      {'TableName': 'votes',
+       'KeySchema': [dict(AttributeName='id', KeyType='HASH'),
+                     dict(AttributeName='create_time', KeyType='RANGE')],
+       'AttributeDefinitions': [dict(AttributeName='id', AttributeType='N'),
+                                dict(AttributeName='create_time', AttributeType='S'),
+                                dict(AttributeName='username', AttributeType='S')
+                                ],
+
+       'GlobalSecondaryIndexes': [
+         {'IndexName': 'userIndex',
+          'KeySchema': [dict(AttributeName='username', KeyType='HASH'),
+                        dict(AttributeName='create_time', KeyType='RANGE')],
+          'Projection': dict(ProjectionType='ALL'),
+          'ProvisionedThroughput': dict(ReadCapacityUnits=5, WriteCapacityUnits=5)
+          }
+         ],
+       'ProvisionedThroughput': dict(ReadCapacityUnits=5, WriteCapacityUnits=5)
        }
     ]
 

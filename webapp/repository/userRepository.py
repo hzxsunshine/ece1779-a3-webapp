@@ -15,6 +15,8 @@ def create_user(username, password):
     response = dynamodb.tables['users'].put_item(
       Item={
         'username': username,
-        'password': password
+        'password': password,
+        'votes_involved_in': [],
       })
+
     print(response)
