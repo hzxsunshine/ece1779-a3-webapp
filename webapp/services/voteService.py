@@ -18,3 +18,15 @@ class CreateVoteForm(FlaskForm):
 
 def create_vote(username, vote_form):
     return voteRepository.create_vote(username, vote_form)
+
+
+def list_all_vote():
+    return voteRepository.list_all_vote()
+
+
+def list_posted_votes(username):
+    return voteRepository.list_posted_votes(username);
+
+
+def list_voted_votes(username):
+    return voteRepository.list_voted_votes(username);

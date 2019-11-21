@@ -3,6 +3,7 @@ import uuid
 from datetime import datetime
 import decimal
 from boto3.dynamodb.types import DYNAMODB_CONTEXT
+from boto3.dynamodb.conditions import Key
 # Inhibit Inexact Exceptions
 DYNAMODB_CONTEXT.traps[decimal.Inexact] = 0
 # Inhibit Rounded Exceptions
@@ -45,3 +46,40 @@ def create_vote(username, vote_form):
 #       ReturnValues="UPDATED_NEW"
 #     )
 
+def list_all_vote():
+    dynamodb = current_app.extensions['dynamo']
+    response = dynamodb.tables['votes'].scan()
+    if "Items" in response:
+        return response["Items"]
+    else:
+        return []
+
+
+def list_posted_votes(username):
+    dynamodb = current_app.extensions['dynamo']
+    response = dynamodb.tables['votes'].query(
+        IndexName="userIndex",
+        KeyConditionExpression = Key('username').eq(username)
+    )
+    if 'Items' in response:
+        return response["Items"]
+    else:
+        return []
+
+
+def list_voted_votes(username):
+    dynamodb = current_app.extensions['dynamo']
+    response = dynamodb.tables['users'].get_item(
+      Key={
+        'username': username
+      }
+    )
+    if "votes_involved_in" in response:
+        votes = []
+        for voteID in response['votes_involved_in']:
+            vote = dynamodb.tables['votes'].get_item(Key={'id': voteID})
+            if 'Item' in vote:
+                votes.append(vote['Item'])
+        return votes
+    else:
+        return []

@@ -1,10 +1,53 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "layout.html" %}
+{% block content %}
+      <div class="spacer-30"></div>
+      <section>
+          <div class="row">
+              <div class="col-md-6 align-center">
+                  <a class="btn btn-lg btn-dark-blue" style="width: 50%" href="/listallvotes">
+                        <span>All Votes</span>
+                  </a>
+              </div>
+              <div class="col-md-6 align-center">
+                  <a id="growlink" class="btn btn-lg btn-dark-blue" style="width: 50%" href="/listmyvotes">
+                      <span>My Votes</span>
+                  </a>
+              </div>
+          </div>
+            <div class="spacer-30"></div>
+      {% if votesPosted|length > 0 or votesVoted|length > 0%}
+          {% if votesPosted|length > 0 %}
+            <h3>Votes posted:</h3>
+            <div class="spacer-30"></div>
+            <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
+                  <ul>
+                  {% for vote in votesPosted %}
+                  <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                        <a class="align-center" href="url for voting it">
+                              <li><h4>{{vote["topic"]}}</h4></li>
+                        </a>
+                  </div>
+                  {% endfor %}
+                  </ul>
+            </div>
+          {% endif %}
+          {% if votesVoted|length > 0 %}
+            <h3>Votes involved in:</h3>
+            <div class="spacer-30"></div>
+            <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
+                  <ul>
+                  {% for vote in votesVoted %}
+                  <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                        <a class="align-center" href="url for voting it">
+                              <li><h4>{{vote["topic"]}}</h4></li>
+                        </a>
+                  </div>
+                  {% endfor %}
+                  </ul>
+            </div>
+          {% endif %}
+      {% else %}
+            <h1 class="mb-4">No votes available! Start posting/voting now! </h1>
+      {% endif %}
+    </section>
+{% endblock content %}
