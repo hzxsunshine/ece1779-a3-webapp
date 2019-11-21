@@ -24,10 +24,10 @@ def get_user_by_username(username):
 
 
 def is_authenticated(username, password):
-    user = userRepository.get_user_by_username(username)
-    if user and security.check_password_hash(user['Item']['password'], password):
-        print(user)
-        return user
+    response = userRepository.get_user_by_username(username)
+    if 'Item' in response and 'username' in response['Item'] and security.check_password_hash(response['Item']['password'], password):
+        print(response['Item']['username'])
+        return response['Item']['username']
     else:
         return None
 

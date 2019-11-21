@@ -22,7 +22,8 @@ def login():
         authenticated_user = userService.is_authenticated(username=form.username.data, password=form.password.data)
         if authenticated_user:
             session['username'] = form.username.data
-            return redirect(url_for('main.home'))
+            next_page = request.args.get('next')
+            return redirect(next_page) if next_page else redirect(url_for('main.home'))
         else:
             current_app.logger.error("----------User '{}' Login failed, username/password do not match record----------"
                                      .format(form.username.data))
