@@ -98,19 +98,27 @@ def vote_results(voteID, vote_create_time):
 
     post_topic = post["topic"]
     options = post["options"]
-    # option1 = options[0] # option1
-    # option2 = options[1] # option2
-    # option3 = options[2] # option3
-    # try:
-    #     option4 = options[3] # option 4
-    # except IndexError:
-    #     option4 = []
-    # try:
-    #     option5 = options[4] # option 5
-    # except IndexError:
-    #     option5 = []
+    sum_all = 0
+    for i in range(len(options)):
+        sum_all += int(options[i]['counts']) * 0.01
 
-    return render_template('votes.result.html', voteID=voteID, vote_create_time=vote_create_time, topic=post_topic, options=options)
-                           # option1 = option1, option2 = option2, option3 = option3, option4 = option4,
-                           # option5 = option5)
+    fractions = []
+    for i in range(len(options)):
+        fractions.append(int(options[i]['counts'])/sum_all)
+
+    option1 = options[0] # option1
+    option2 = options[1] # option2
+    option3 = options[2] # option3
+    try:
+        option4 = options[3] # option 4
+    except IndexError:
+        option4 = []
+    try:
+        option5 = options[4] # option 5
+    except IndexError:
+        option5 = []
+
+    return render_template('votes.result.html', voteID=voteID, vote_create_time=vote_create_time, topic=post_topic, options = options, fractions = fractions,
+                           option1 = option1, option2 = option2, option3 = option3, option4 = option4,
+                           option5 = option5)
 
