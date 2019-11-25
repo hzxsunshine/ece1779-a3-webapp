@@ -1,0 +1,99 @@
+<style>
+
+body {
+  padding: 50px;
+  background-color: hsl(0,0%,20%);
+}
+
+input:checked {
+  -webkit-transition: background-position .2s .15s cubic-bezier(0, 0, .2, 1),
+    -webkit-transform .25s cubic-bezier(0, 0, .2, 1);
+}
+input:active {
+  -webkit-transform: scale(1.5);
+  -webkit-transition: -webkit-transform .1s cubic-bezier(0, 0, .2, 1);
+}
+
+{#input {#}
+{#    -webkit-appearance: none; /* remove default */#}
+{#    display: block;#}
+{#    margin: 10px;#}
+{#    width: 24px;#}
+{#    height: 24px;#}
+{#    border-radius: 12px;#}
+{#    cursor: pointer;#}
+{#    vertical-align: middle;#}
+{#    box-shadow: hsla(0, 0%, 100%, .15) 0 1px 1px, inset hsla(0, 0%, 0%, .5) 0 0 0 1px;#}
+{#    background-color: hsla(0, 0%, 0%, .2);#}
+{#    background-image: -webkit-radial-gradient(hsla(200, 100%, 90%, 1) 0%, hsla(200, 100%, 70%, 1) 15%, hsla(200, 100%, 60%, .3) 28%, hsla(200, 100%, 30%, 0) 70%);#}
+{#    background-repeat: no-repeat;#}
+{#    -webkit-transition: background-position .15s cubic-bezier(.8, 0, 1, 1),#}
+{#    -webkit-transform .25s cubic-bezier(.8, 0, 1, 1);#}
+{##}
+/* The up/down direction logic */
+
+input,
+input:active {
+  background-position: 0 24px;
+}
+input:checked {
+  background-position: 0 0;
+}
+input:checked ~ input,
+input:checked ~ input:active {
+  background-position: 0 -24px;
+}
+</style>
+
+{% extends "layout.html" %}
+{% block content %}
+    <script src="../static/js/prefixfree.min.js"></script>
+      <div class="spacer-30"></div>
+      <div class="content-section">
+      <form method="POST" action="{{ url_for('votes.vote_details', voteID = voteID, vote_create_time=vote_create_time) }}">
+            <fieldset  class="radio-check-label">
+                <legend class="border-bottom mb-4">{{ topic }}</legend>
+                <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
+{#                    {% for option in options %}#}
+                  <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                        <label class="radio" id="option">
+                            <input type="radio" name="name" value="0" />
+                            <span>{{option1}}</span>
+                        </label>
+                  </div>
+{#                    {% endfor %}#}
+                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                        <label class="radio" id="option">
+                            <input type="radio" name="name" value="1" />
+                            <span>{{option2}}</span>
+                        </label>
+                  </div>
+                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                        <label class="radio" id="option">
+                            <input type="radio" name="name" value="2" />
+                            <span>{{option3}}</span>
+                        </label>
+                  </div>
+                    {% if option4|length > 0 %}
+                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                        <label class="radio" id="option">
+                            <input type="radio" name="name" value="3" />
+                            <span>{{option4}}</span>
+                        </label>
+                  </div>
+                    {% endif %}
+                    {% if option5|length > 0 %}
+                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                        <label class="radio" id="option">
+                            <input type="radio" name="name" value="4"/>
+                            <span>{{option5}}</span>
+                        </label>
+                  </div>
+                    {% endif %}
+                </div>
+                <input type="submit" name="submit" value="submit"/>
+            </fieldset>
+            <div class="spacer-50"></div>
+      </form>
+      </div>
+{% endblock content %}

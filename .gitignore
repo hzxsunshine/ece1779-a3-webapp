@@ -2714,3 +2714,8 @@ venv/lib/python3.7/site-packages/zappa/utilities.py
 venv/lib/python3.7/site-packages/zappa/wsgi.py
 venv/man/man1/tqdm.1
 venv/pyvenv.cfg
+webapp/static/.DS_Store
+webapp/static/js/.DS_Store
+webapp/templates/test.html
+webapp/.DS_Store
+.DS_Store

@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block content %}
+      <div class="spacer-30"></div>
+      <div class="content-section">
+      <form method="POST" action="{{ url_for('votes.vote_details', voteID = voteID, vote_create_time=vote_create_time) }}">
+                <legend class="border-bottom mb-4">{{ topic }}</legend>
+                <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
+                    {% for option in options %}
+                  <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                        <label class="radio" id="option">
+                            <input type="radio" name="name" value="0" />
+                            <span>{{ option['content'] }}:{{option['counts']}}</span>
+                        </label>
+                  </div>
+                    {% endfor %}
+{#                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">#}
+{#                        <label class="radio" id="option">#}
+{#                            <input type="radio" name="name" value="1" />#}
+{#                            <span>{{option2}}</span>#}
+{#                        </label>#}
+{#                  </div>#}
+{#                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">#}
+{#                        <label class="radio" id="option">#}
+{#                            <input type="radio" name="name" value="2" />#}
+{#                            <span>{{option3}}</span>#}
+{#                        </label>#}
+{#                  </div>#}
+{#                    {% if option4|length > 0 %}#}
+{#                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">#}
+{#                        <label class="radio" id="option">#}
+{#                            <input type="radio" name="name" value="3" />#}
+{#                            <span>{{option4}}</span>#}
+{#                        </label>#}
+{#                  </div>#}
+{#                    {% endif %}#}
+{#                    {% if option5|length > 0 %}#}
+{#                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">#}
+{#                        <label class="radio" id="option">#}
+{#                            <input type="radio" name="name" value="4"/>#}
+{#                            <span>{{option5}}</span>#}
+{#                        </label>#}
+{#                  </div>#}
+{#                    {% endif %}#}
+                </div>
+            <div class="spacer-50"></div>
+      </form>
+      </div>
+{% endblock content %}

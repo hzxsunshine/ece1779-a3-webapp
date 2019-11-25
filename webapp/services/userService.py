@@ -36,9 +36,8 @@ def create_user(username, password):
     hashed_password = security.generate_password_hash(password, method='pbkdf2:sha1', salt_length=8)
     userRepository.create_user(username, hashed_password)
 
-
-
-
+def update_user_votes(username, voteID):
+    return userRepository.update_user_votes(username,voteID)
 
 
 

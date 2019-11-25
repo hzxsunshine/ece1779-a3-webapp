@@ -25,8 +25,25 @@ def list_all_vote():
 
 
 def list_posted_votes(username):
-    return voteRepository.list_posted_votes(username);
+    return voteRepository.list_posted_votes(username)
 
 
 def list_voted_votes(username):
-    return voteRepository.list_voted_votes(username);
+    return voteRepository.list_voted_votes(username)
+
+
+# def list_specific_vote(voteID, vote_create_time):
+#     return voteRepository.list_specific_vote(voteID, vote_create_time)
+
+def list_specific_vote(voteID):
+    return voteRepository.list_specific_vote(voteID)
+
+# def vote_update(voteID, vote_create_time, optionID):
+#     return voteRepository.update_vote(voteID, vote_create_time, optionID)
+
+def vote_update(voteID,optionID):
+    return voteRepository.update_vote(voteID, optionID)
+
+
+def list_voted_IDS(username):
+    return voteRepository.list_voted_ID(username)

@@ -18,8 +18,7 @@ class Config(object):
        'ProvisionedThroughput': dict(ReadCapacityUnits=5, WriteCapacityUnits=5)
        },
       {'TableName': 'votes',
-       'KeySchema': [dict(AttributeName='id', KeyType='HASH'),
-                     dict(AttributeName='create_time', KeyType='RANGE')],
+       'KeySchema': [dict(AttributeName='id', KeyType='HASH')],
        'AttributeDefinitions': [dict(AttributeName='id', AttributeType='N'),
                                 dict(AttributeName='create_time', AttributeType='S'),
                                 dict(AttributeName='username', AttributeType='S')

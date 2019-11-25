@@ -23,7 +23,7 @@ def login():
         if authenticated_user:
             session['username'] = form.username.data
             next_page = request.args.get('next')
-            return redirect(next_page) if next_page else redirect(url_for('main.home'))
+            return redirect(next_page) if next_page else redirect(url_for('votes.list_my_vote'))
         else:
             current_app.logger.error("----------User '{}' Login failed, username/password do not match record----------"
                                      .format(form.username.data))
@@ -70,3 +70,5 @@ def register():
 def logout():
     session.pop('username', None)
     return redirect(url_for('users.login'))
+
+
