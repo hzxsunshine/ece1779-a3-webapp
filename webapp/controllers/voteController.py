@@ -101,10 +101,9 @@ def vote_results(voteID, vote_create_time):
     sum_all = 0
     for i in range(len(options)):
         sum_all += int(options[i]['counts']) * 0.01
-
     fractions = []
     for i in range(len(options)):
-        fractions.append(int(options[i]['counts'])/sum_all)
+        fractions.append(int(int(options[i]['counts'])/sum_all * 100 + 0.5)/ 100.0)
 
     option1 = options[0] # option1
     option2 = options[1] # option2
