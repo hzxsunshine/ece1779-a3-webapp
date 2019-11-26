@@ -89,9 +89,10 @@ def list_voted_ID(username):
       }
     )
     voteIDs = []
-    item =  response['Item']
-    for n in item['votes_involved_in']:
-        voteIDs.append(n)
+    if 'Item' in response:
+        item =  response['Item']
+        for n in item['votes_involved_in']:
+            voteIDs.append(n)
     return voteIDs
 
 # list a specific vote:
