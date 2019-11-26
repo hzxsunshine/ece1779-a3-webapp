@@ -24,13 +24,15 @@
                       {{ option3['content'] }} : {{ option3['counts'] }} with {{ fractions[2] }}%
                   </div>
                 </div>
+                <br>
                     {% if option4|length > 0 %}
-                        <br>
+
                 <div class="progress" style="height: 40px">
                   <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[3] }}%">
                       {{ option4['content'] }} : {{ option4['counts'] }} with {{ fractions[3] }}%
                   </div>
                 </div>
+                    <br>
                     {% endif %}
 
                     {% if option5|length > 0 %}
@@ -40,6 +42,7 @@
                       {{ option5['content'] }}  : {{ option5['counts'] }} with {{ fractions[4] }}%
                   </div>
                 </div>
+                    <br>
                     {% endif %}
 
                 </div>
