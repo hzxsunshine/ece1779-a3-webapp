@@ -24,7 +24,7 @@
                   {% for vote in votesPosted %}
                   <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
                         <a class="align-center" href="{{url_for('votes.vote_details',voteID=vote["id"], vote_create_time=vote["create_time"])}}">
-                              <li><h4>{{vote["topic"]}}</h4></li>
+                              <h4>{{vote["topic"]}}</h4>
                         </a>
                   </div>
                   {% endfor %}
@@ -32,6 +32,7 @@
             </div>
           {% endif %}
           {% if votesVoted|length > 0 %}
+            <div class="spacer-30"></div>
             <h3>Votes involved in:</h3>
             <div class="spacer-30"></div>
             <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
