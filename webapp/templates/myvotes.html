@@ -23,7 +23,7 @@
                   <ul>
                   {% for vote in votesPosted %}
                   <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
-                        <a class="align-center" href="{{url_for('votes.vote_details',voteID=vote["id"], vote_create_time=vote["create_time"])}}">
+                        <a class="align-center" href="{{url_for('votes.vote_details',vote_id=vote["id"], vote_create_time=vote["create_time"])}}">
                               <h4>{{vote["topic"]}}</h4>
                         </a>
                   </div>
@@ -39,7 +39,7 @@
                   <ul>
                   {% for vote in votesVoted %}
                   <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
-                        <a class="align-center" href="{{url_for('votes.vote_details',voteID=vote["id"],vote_create_time=vote["create_time"])}}">
+                        <a class="align-center" href="{{url_for('votes.vote_details',vote_id=vote["id"],vote_create_time=vote["create_time"])}}">
                               <h4>{{vote["topic"]}}</h4>
                         </a>
                   </div>

@@ -20,7 +20,7 @@ def create_vote(username, vote_form):
     if vote_form.option5.data is not None and vote_form.option5.data != "":
         options.append(dict(content=vote_form.option5.data, counts=0))
 
-    vote_id = uuid.uuid1().int
+    vote_id = str(uuid.uuid4())
     dynamodb = current_app.extensions['dynamo']
     dynamodb.tables['votes'].put_item(
       Item={
@@ -29,7 +29,8 @@ def create_vote(username, vote_form):
         'username': username,
         'topic': vote_form.vote_topic.data,
         'options': options,
-        'num_voted' : 0
+        'valid_days': vote_form.valid_days.data,
+        'num_voted': 0
       })
     return vote_id
 
@@ -74,9 +75,8 @@ def list_voted_votes(username):
     IDs = list_voted_ID(username)
 
     votes = []
-    for voteID in IDs:
-        voteID = convertID(voteID)
-        vote = dynamodb.tables['votes'].get_item(Key={'id': voteID})
+    for vote_id in IDs:
+        vote = dynamodb.tables['votes'].get_item(Key={'id': vote_id})
 
         if 'Item' in vote:
             votes.insert(0, vote['Item'])
@@ -90,24 +90,23 @@ def list_voted_ID(username):
         'username': username
       }
     )
-    voteIDs = []
+    vote_ids = []
     if 'Item' in response:
-        item =  response['Item']
+        item = response['Item']
         for n in item['votes_involved_in']:
-            voteIDs.append(n)
-    return voteIDs
+            vote_ids.append(n)
+    return vote_ids
+
 
 # list a specific vote:
-#def list_specific_vote(voteID, vote_create_time):
-def list_specific_vote(voteID):
+def list_specific_vote(vote_id):
     dynamodb = current_app.extensions['dynamo']
-    ID = convertID(voteID)
-    #response = dynamodb.tables['votes'].get_item(Key={'id': ID, 'create_time':vote_create_time})
-    response = dynamodb.tables['votes'].get_item(Key={'id': ID})
+    response = dynamodb.tables['votes'].get_item(Key={'id': vote_id})
     if 'Item' in response:
         return response['Item']
     else:
         return []
+
 
 def find_hot_votes(votes):
     hot_votes = sorted(votes, key=lambda i: i['num_voted'], reverse=True)
@@ -116,32 +115,15 @@ def find_hot_votes(votes):
     else:
         return hot_votes
 
-def convertID(voteID):
-    try:
-        ID = int(voteID)
-    except ValueError:
-        ID = int(voteID[:-4].replace('.',''))
-    if len(str(ID)) < 39:
-        ID = int(str(ID) + '0' * (39 - len(str(ID))))
-    return ID
 
-
-#def update_vote(voteID, vote_create_time, optionID):
-def update_vote(voteID, optionID):
-    ID = convertID(voteID)
+def update_vote(vote_id, option_id):
     dynamodb = current_app.extensions['dynamo']
-    # response = dynamodb.tables['votes'].get_item(Key={'id': ID, 'create_time':vote_create_time})
-    response = dynamodb.tables['votes'].get_item(Key={'id': ID})
-
-    #update = str(int(response['Item']["options"][int(optionID)]["count"]) + 1)
+    dynamodb.tables['votes'].get_item(Key={'id': vote_id})
     dynamodb.tables['votes'].update_item(
         Key={
-            'id': ID,
-            # 'create_time': vote_create_time
+            'id': vote_id,
         },
-        # UpdateExpression= 'set #ctr = #ctr + :val',
-        UpdateExpression='set options[{}].counts = options[{}].counts + :val'.format(optionID,optionID),
-        # ExpressionAttributeNames={"#ctr": "options[1].count"},
+        UpdateExpression='set options[{}].counts = options[{}].counts + :val'.format(option_id,option_id),
         ExpressionAttributeValues={
             ':val': decimal.Decimal(1)
         }
@@ -149,10 +131,8 @@ def update_vote(voteID, optionID):
 
     dynamodb.tables['votes'].update_item(
         Key={
-            'id': ID,
-            # 'create_time': vote_create_time
+            'id': vote_id,
         },
-        # UpdateExpression= 'set #ctr = #ctr + :val',
         UpdateExpression='set num_voted = num_voted + :val',
         ExpressionAttributeValues={
             ':val': decimal.Decimal(1)

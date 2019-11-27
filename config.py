@@ -19,7 +19,7 @@ class Config(object):
        },
       {'TableName': 'votes',
        'KeySchema': [dict(AttributeName='id', KeyType='HASH')],
-       'AttributeDefinitions': [dict(AttributeName='id', AttributeType='N'),
+       'AttributeDefinitions': [dict(AttributeName='id', AttributeType='S'),
                                 dict(AttributeName='create_time', AttributeType='S'),
                                 dict(AttributeName='username', AttributeType='S')
                                 ],
