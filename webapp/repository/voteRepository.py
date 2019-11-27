@@ -4,8 +4,11 @@ from datetime import datetime
 import decimal
 from boto3.dynamodb.types import DYNAMODB_CONTEXT
 from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Attr
+from boto3.dynamodb.conditions import Or
 import re
 import json
+from boto3 import dynamodb
 
 # Inhibit Inexact Exceptions
 DYNAMODB_CONTEXT.traps[decimal.Inexact] = 0
@@ -52,14 +55,23 @@ def create_vote(username, vote_form):
 #     )
 
 def search_votes(search_form):
-    keywords = search_form.data
+    keywords = search_form.vote_topic.data
     dynamodb = current_app.extensions['dynamo']
 
-    # keyword = re.sub('  ', " ", re.sub("[\u0060|\u0021-\u002c|\u002e-\u002f|\u003a-\u003f|\u2200-\u22ff|\uFB00-\uFFFD|\u2E80-\u33FF]", ' ', keywords)).split(' ')
-    # words = json.dump(keyword)
+    keyword = re.sub('  ', " ", re.sub("[\u0060|\u0021-\u002c|\u002e-\u002f|\u003a-\u003f|\u2200-\u22ff|\uFB00-\uFFFD|\u2E80-\u33FF]",
+                                       ' ', keywords)).split(' ')
+    filter_expression_list = []
+    Attr("topic").contains("test"), Attr("topic").contains("how")
+    for i in range(len(keyword)):
+        filter_expression_list.append(Attr("topic").contains("{}".format(keyword[i])))
+
+    if len(keyword) > 1:
+        expression = Or(*filter_expression_list)
+    else:
+        expression = Attr("topic").contains("{}".format(keyword[0]))
 
     results = dynamodb.tables['votes'].scan(
-        FilterExpression=Attr("topic").eq("test")
+        FilterExpression = expression
     )
     return results["Items"]
 

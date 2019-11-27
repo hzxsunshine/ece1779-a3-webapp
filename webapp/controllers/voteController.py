@@ -32,7 +32,7 @@ def search_vote():
     form = voteService.SearchForm()
     if form.validate_on_submit():
         results = voteService.search_votes(search_form = form)
-        return render_template('votes.search.html', title=results, form=form) #render_template(VOTE_CREATION_PAGE, title='Search Results', form=form)
+        return render_template('votes.search.html', title="Search results for {}".format(form.vote_topic.data), form=form, votesPosted=results) #render_template(VOTE_CREATION_PAGE, title='Search Results', form=form)
     else:
         if request == 'POST':
             current_app.logger.error("----------Internal Error: {}----------".format(form.errors))
