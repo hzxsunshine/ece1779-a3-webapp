@@ -1,12 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import DataRequired, Length, EqualTo
+from wtforms.validators import DataRequired, Length, EqualTo, Email
 from webapp.repository import userRepository
 from werkzeug import security
 
 
 class CreateUserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=2, max=30)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6, max=20)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Sign Up')
@@ -32,12 +33,13 @@ def is_authenticated(username, password):
         return None
 
 
-def create_user(username, password):
+def create_user(username, email, password):
     hashed_password = security.generate_password_hash(password, method='pbkdf2:sha1', salt_length=8)
-    userRepository.create_user(username, hashed_password)
+    userRepository.create_user(username, email, hashed_password)
 
-def update_user_votes(username, voteID):
-    return userRepository.update_user_votes(username,voteID)
+
+def update_user_votes(username, vote_id):
+    return userRepository.update_user_votes(username, vote_id)
 
 
 

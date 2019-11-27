@@ -11,36 +11,28 @@ def get_user_by_username(username):
     )
 
 
-def create_user(username, password):
+def create_user(username, email, password):
     dynamodb = current_app.extensions['dynamo']
     response = dynamodb.tables['users'].put_item(
       Item={
         'username': username,
+        'email': email,
         'password': password,
         'votes_involved_in': [],
       })
 
     print(response)
 
-def convertID(voteID):
-    try:
-        ID = int(voteID)
-    except ValueError:
-        ID = int(voteID[:-4].replace('.',''))
-    if len(str(ID)) < 39:
-        ID = int(str(ID) + '0' * (39 - len(str(ID))))
-    return ID
 
-def update_user_votes(username, voteID):
+def update_user_votes(username, vote_id):
     dynamodb = current_app.extensions['dynamo']
-    ID = convertID(voteID)
     dynamodb.tables['users'].update_item(
         Key={
             'username': username
         },
         UpdateExpression='set votes_involved_in = list_append(votes_involved_in, :val)',
         ExpressionAttributeValues={
-            ':val': [Decimal(ID)]
+            ':val': [vote_id]
         }
     )
     return True

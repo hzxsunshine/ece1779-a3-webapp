@@ -52,7 +52,7 @@ def register():
                                    error=USER_EXISTED_ERROR.format(form.username.data)), 409
         else:
             try:
-                userService.create_user(username=form.username.data, password=form.password.data)
+                userService.create_user(username=form.username.data, email=form.email.data, password=form.password.data)
                 login_form = userService.LoginForm()
                 current_app.logger.info("----------User '{}' register successful----------".format(form.username.data))
                 return render_template(LOGIN_PAGE, title='Login', form=login_form, message=REG_SUCCESS_MSG)

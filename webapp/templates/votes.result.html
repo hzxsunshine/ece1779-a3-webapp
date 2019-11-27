@@ -2,7 +2,7 @@
 {% block content %}
       <div class="spacer-30"></div>
       <div class="content-section">
-      <form method="POST" action="{{ url_for('votes.vote_details', voteID = voteID, vote_create_time=vote_create_time) }}">
+      <form method="POST" action="{{ url_for('votes.vote_details', vote_id = vote_id, vote_create_time=vote_create_time) }}">
                 <legend class="border-bottom mb-4">{{ topic }}</legend>
                 <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
 

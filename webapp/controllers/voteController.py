@@ -18,7 +18,7 @@ def post_vote():
     form = voteService.CreateVoteForm()
     if form.validate_on_submit():
         vote_id = voteService.create_vote(username=session['username'], vote_form=form)
-        return "Vote with id : " + str(vote_id) + "post successfully"
+        return "Vote with id : " + vote_id + "post successfully"
     else:
         if request == 'POST':
             current_app.logger.error("----------Internal Error: {}----------".format(form.errors))
@@ -46,8 +46,8 @@ def list_vote():
     login = True
     if 'username' not in session:
         login = False
-    all_vote_list = voteService.list_all_vote()
-    return render_template(VOTE_LIST_PAGE, login=login, title='List Vote', votes=all_vote_list)
+    (all_vote_list, hot_votes) = voteService.list_all_vote()
+    return render_template(VOTE_LIST_PAGE, login=login, title='List Vote', votes=all_vote_list, hot_votes=hot_votes)
 
 
 @votes.route('/listmyvotes', methods=['GET'])
@@ -58,15 +58,15 @@ def list_my_vote():
     voted_votes = voteService.list_voted_votes(session['username'])
     return render_template(MY_VOTE_LIST_PAGE, title='List My Vote', votesPosted=posted_votes, votesVoted=voted_votes)
 
-@votes.route('/votes.detail/<voteID>/<vote_create_time>', methods=['GET','POST'])
-def vote_details(voteID, vote_create_time):
-    # post = voteService.list_specific_vote(voteID, vote_create_time)
-    post = voteService.list_specific_vote(voteID)
+@votes.route('/votes.detail/<vote_id>/<vote_create_time>', methods=['GET','POST'])
+def vote_details(vote_id, vote_create_time):
+    # post = voteService.list_specific_vote(vote_id, vote_create_time)
+    post = voteService.list_specific_vote(vote_id)
     if 'username' in session:
         username = session['username']
         ID = voteService.list_voted_IDS(username)
-        if Decimal(voteID) in ID:
-            return redirect(url_for('votes.vote_results', voteID=voteID, vote_create_time=vote_create_time))
+        if vote_id in ID:
+            return redirect(url_for('votes.vote_results', vote_id=vote_id, vote_create_time=vote_create_time))
 
 
     post_topic = post["topic"]
@@ -91,31 +91,31 @@ def vote_details(voteID, vote_create_time):
         username = session['username']
         ID = voteService.list_voted_IDS(username)
 
-        if Decimal(voteID) in ID:
-            return redirect(url_for('votes.vote_results', voteID=voteID, vote_create_time=vote_create_time))
+        if vote_id in ID:
+            return redirect(url_for('votes.vote_results', vote_id=vote_id, vote_create_time=vote_create_time))
         else:
-            #voteService.vote_update(voteID, vote_create_time, num)
-            voteService.vote_update(voteID, num)
-            userService.update_user_votes(username,voteID)
-            return redirect(url_for('votes.vote_results', voteID=voteID,vote_create_time=vote_create_time))
+            #voteService.vote_update(vote_id, vote_create_time, num)
+            voteService.vote_update(vote_id, num)
+            userService.update_user_votes(username, vote_id)
+            return redirect(url_for('votes.vote_results', vote_id=vote_id,vote_create_time=vote_create_time))
 
-    return render_template('votes.detail.html', voteID=voteID, vote_create_time=vote_create_time, topic=post_topic, options=options,
+    return render_template('votes.detail.html', vote_id=vote_id, vote_create_time=vote_create_time, topic=post_topic, options=options,
                            option1 = option1, option2 = option2, option3 = option3, option4 = option4,
                            option5 = option5)
 
 
-@votes.route('/votes.result/<voteID>/<vote_create_time>', methods=['GET','POST'])
-def vote_results(voteID, vote_create_time):
+@votes.route('/votes.result/<vote_id>/<vote_create_time>', methods=['GET','POST'])
+def vote_results(vote_id, vote_create_time):
     if 'username' not in session:
-        return redirect(url_for('votes.vote_details', voteID = voteID, vote_create_time = vote_create_time))
+        return redirect(url_for('votes.vote_details', vote_id = vote_id, vote_create_time = vote_create_time))
 
-    post = voteService.list_specific_vote(voteID)
-    #post = voteService.list_specific_vote(voteID, vote_create_time)
+    post = voteService.list_specific_vote(vote_id)
+    #post = voteService.list_specific_vote(vote_id, vote_create_time)
     username = session['username']
     IDs = voteService.list_voted_IDS(username)
 
-    if Decimal(voteID) not in IDs:
-        return redirect(url_for('votes.vote_details', voteID = voteID, vote_create_time = vote_create_time))
+    if vote_id not in IDs:
+        return redirect(url_for('votes.vote_details', vote_id = vote_id, vote_create_time = vote_create_time))
 
     post_topic = post["topic"]
     options = post["options"]
@@ -138,7 +138,7 @@ def vote_results(voteID, vote_create_time):
     except IndexError:
         option5 = []
 
-    return render_template('votes.result.html', voteID=voteID, vote_create_time=vote_create_time, topic=post_topic, options = options, fractions = fractions,
+    return render_template('votes.result.html', vote_id=vote_id, vote_create_time=vote_create_time, topic=post_topic, options = options, fractions = fractions,
                            option1 = option1, option2 = option2, option3 = option3, option4 = option4,
                            option5 = option5)
 
