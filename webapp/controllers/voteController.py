@@ -32,8 +32,8 @@ def list_vote():
     login = True
     if 'username' not in session:
         login = False
-    all_vote_list = voteService.list_all_vote()
-    return render_template(VOTE_LIST_PAGE, login=login, title='List Vote', votes=all_vote_list)
+    (all_vote_list, hot_votes) = voteService.list_all_vote()
+    return render_template(VOTE_LIST_PAGE, login=login, title='List Vote', votes=all_vote_list, hot_votes=hot_votes)
 
 
 @votes.route('/listmyvotes', methods=['GET'])

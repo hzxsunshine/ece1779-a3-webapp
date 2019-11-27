@@ -51,7 +51,8 @@ def list_all_vote():
     dynamodb = current_app.extensions['dynamo']
     response = dynamodb.tables['votes'].scan()
     if "Items" in response:
-        return sort_votes(response["Items"])
+        hot_votes = find_hot_votes((response["Items"]))
+        return (sort_votes(response["Items"]), hot_votes)
     else:
         return []
 
@@ -108,6 +109,12 @@ def list_specific_vote(voteID):
     else:
         return []
 
+def find_hot_votes(votes):
+    hot_votes = sorted(votes, key=lambda i: i['num_voted'], reverse=True)
+    if len(hot_votes) >= 3:
+        return hot_votes[0:3]
+    else:
+        return hot_votes
 
 def convertID(voteID):
     try:
