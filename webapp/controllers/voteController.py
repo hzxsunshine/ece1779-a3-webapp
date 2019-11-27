@@ -27,6 +27,20 @@ def post_vote():
     return render_template(VOTE_CREATION_PAGE, title='Post Vote', form=form)
 
 
+@votes.route('/search', methods=['GET', 'POST'])
+def search_vote():
+    form = voteService.SearchForm()
+    if form.validate_on_submit():
+        results = voteService.search_votes(search_form = form)
+        return render_template('votes.search.html', title=results, form=form) #render_template(VOTE_CREATION_PAGE, title='Search Results', form=form)
+    else:
+        if request == 'POST':
+            current_app.logger.error("----------Internal Error: {}----------".format(form.errors))
+            return render_template('votes.search.html', title='search', form=form, error=INTERNAL_ERROR_MSG), 500
+
+    return render_template('votes.search.html', title='Search', form=form)
+
+
 @votes.route('/listallvotes', methods=['GET'])
 def list_vote():
     login = True

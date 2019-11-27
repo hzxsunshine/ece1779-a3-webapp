@@ -4,6 +4,9 @@ from datetime import datetime
 import decimal
 from boto3.dynamodb.types import DYNAMODB_CONTEXT
 from boto3.dynamodb.conditions import Key
+import re
+import json
+
 # Inhibit Inexact Exceptions
 DYNAMODB_CONTEXT.traps[decimal.Inexact] = 0
 # Inhibit Rounded Exceptions
@@ -45,6 +48,19 @@ def create_vote(username, vote_form):
 #       },
 #       ReturnValues="UPDATED_NEW"
 #     )
+
+def search_votes(search_form):
+    keywords = search_form.data
+    dynamodb = current_app.extensions['dynamo']
+
+    # keyword = re.sub('  ', " ", re.sub("[\u0060|\u0021-\u002c|\u002e-\u002f|\u003a-\u003f|\u2200-\u22ff|\uFB00-\uFFFD|\u2E80-\u33FF]", ' ', keywords)).split(' ')
+    # words = json.dump(keyword)
+
+    results = dynamodb.tables['votes'].scan(
+        FilterExpression=Attr("topic").eq("test")
+    )
+    return results["Items"]
+
 
 def list_all_vote():
     dynamodb = current_app.extensions['dynamo']

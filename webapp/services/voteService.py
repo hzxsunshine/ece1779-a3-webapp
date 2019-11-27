@@ -15,6 +15,13 @@ class CreateVoteForm(FlaskForm):
 
     submit = SubmitField('Post Vote')
 
+class SearchForm(FlaskForm):
+    vote_topic = StringField('Vote Topic', widget=TextArea(), validators=[validators.DataRequired(), validators.Length(min=1, max=500)])
+    submit = SubmitField('Search')
+
+
+def search_votes(search_form):
+    return voteRepository.search_votes(search_form)
 
 def create_vote(username, vote_form):
     return voteRepository.create_vote(username, vote_form)
