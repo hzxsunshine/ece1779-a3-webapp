@@ -48,6 +48,13 @@ def list_my_vote():
 def vote_details(voteID, vote_create_time):
     # post = voteService.list_specific_vote(voteID, vote_create_time)
     post = voteService.list_specific_vote(voteID)
+    if 'username' in session:
+        username = session['username']
+        ID = voteService.list_voted_IDS(username)
+        if Decimal(voteID) in ID:
+            return redirect(url_for('votes.vote_results', voteID=voteID, vote_create_time=vote_create_time))
+
+
     post_topic = post["topic"]
     options = post["options"]
     option1 = options[0]["content"] # option1
