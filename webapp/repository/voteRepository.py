@@ -28,7 +28,8 @@ def create_vote(username, vote_form):
         'create_time': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         'username': username,
         'topic': vote_form.vote_topic.data,
-        'options': options
+        'options': options,
+        'num_voted' : 0
       })
     return vote_id
 
@@ -50,7 +51,7 @@ def list_all_vote():
     dynamodb = current_app.extensions['dynamo']
     response = dynamodb.tables['votes'].scan()
     if "Items" in response:
-        return response["Items"]
+        return sort_votes(response["Items"])
     else:
         return []
 
@@ -62,7 +63,7 @@ def list_posted_votes(username):
         KeyConditionExpression = Key('username').eq(username)
     )
     if 'Items' in response:
-        return response["Items"]
+        return sort_votes(response["Items"])
     else:
         return []
 
@@ -77,7 +78,7 @@ def list_voted_votes(username):
         vote = dynamodb.tables['votes'].get_item(Key={'id': voteID})
 
         if 'Item' in vote:
-            votes.append(vote['Item'])
+            votes.insert(0, vote['Item'])
     return votes
 
 
@@ -89,9 +90,11 @@ def list_voted_ID(username):
       }
     )
     voteIDs = []
-    item =  response['Item']
-    for n in item['votes_involved_in']:
-        voteIDs.append(n)
+    item = []
+    if 'Item' in response and 'votes_involved_in' in response['Item']:
+        item = response['Item']
+        for n in item['votes_involved_in']:
+            voteIDs.append(n)
     return voteIDs
 
 # list a specific vote:
@@ -116,6 +119,7 @@ def convertID(voteID):
         ID = int(str(ID) + '0' * (39 - len(str(ID))))
     return ID
 
+
 #def update_vote(voteID, vote_create_time, optionID):
 def update_vote(voteID, optionID):
     ID = convertID(voteID)
@@ -137,5 +141,18 @@ def update_vote(voteID, optionID):
         }
     )
 
+    dynamodb.tables['votes'].update_item(
+        Key={
+            'id': ID,
+            # 'create_time': vote_create_time
+        },
+        # UpdateExpression= 'set #ctr = #ctr + :val',
+        UpdateExpression='set num_voted = num_voted + :val',
+        ExpressionAttributeValues={
+            ':val': decimal.Decimal(1)
+        }
+    )
 
 
+def sort_votes(votes):
+    return sorted(votes, key = lambda i: i['create_time'], reverse = True)
