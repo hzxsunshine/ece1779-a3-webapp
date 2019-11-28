@@ -9,16 +9,20 @@ VOTE_CREATION_PAGE = "vote.creation.html"
 VOTE_LIST_PAGE = "votes.list.html"
 MY_VOTE_LIST_PAGE = "myvotes.html"
 INTERNAL_ERROR_MSG = "Internal Error, please try again later."
+LOGIN_PAGE = "login.html"
 
 
 @votes.route('/vote', methods=['GET', 'POST'])
 def post_vote():
     if 'username' not in session:
-        return redirect(url_for('users.login'))
+        login_form = userService.LoginForm()
+        error = "To initiate a vote, you need to login to your account first!"
+        return render_template(LOGIN_PAGE, title='Login', form=login_form, error=error)
     form = voteService.CreateVoteForm()
     if form.validate_on_submit():
         vote_id = voteService.create_vote(username=session['username'], vote_form=form)
-        return "Vote with id : " + vote_id + "post successfully"
+        message = "Vote with id : " + vote_id + " has been initiated successfully!"
+        return render_template(VOTE_CREATION_PAGE, title='Post Vote', form=form, message=message)
     else:
         if request == 'POST':
             current_app.logger.error("----------Internal Error: {}----------".format(form.errors))
@@ -27,38 +31,47 @@ def post_vote():
     return render_template(VOTE_CREATION_PAGE, title='Post Vote', form=form)
 
 
-@votes.route('/search', methods=['GET', 'POST'])
-def search_vote():
-    form = voteService.SearchForm()
-    if form.validate_on_submit():
-        results = voteService.search_votes(search_form = form)
-        return render_template('votes.search.html', title="Search results for {}".format(form.vote_topic.data), form=form, votesPosted=results) #render_template(VOTE_CREATION_PAGE, title='Search Results', form=form)
-    else:
-        if request == 'POST':
-            current_app.logger.error("----------Internal Error: {}----------".format(form.errors))
-            return render_template('votes.search.html', title='search', form=form, error=INTERNAL_ERROR_MSG), 500
-
-    return render_template('votes.search.html', title='Search', form=form)
+@votes.route('/hotvotes', methods=['GET'])
+def hot_vote():
+    login = True
+    if 'username' not in session:
+        login = False
+    (all_vote_list, hot_votes) = voteService.list_all_vote()
+    return render_template("votes.hot.html", login=login, title='Hot Topics', hot_votes=hot_votes)
 
 
-@votes.route('/listallvotes', methods=['GET'])
+@votes.route('/listallvotes', methods=['GET', 'POST'])
 def list_vote():
     login = True
     if 'username' not in session:
         login = False
     (all_vote_list, hot_votes) = voteService.list_all_vote()
-    return render_template(VOTE_LIST_PAGE, login=login, title='List Vote', votes=all_vote_list, hot_votes=hot_votes)
+    form = voteService.SearchForm()
+    if form.validate_on_submit():
+        results = voteService.search_votes(search_form=form)
+        message = str(len(results)) + ' result found from searching!'
+        return render_template(VOTE_LIST_PAGE, login=login, title="Search Topics",
+                               form=form, votes=all_vote_list, hot_votes=hot_votes, votesPosted=results, message=message)  # render_template(VOTE_CREATION_PAGE, title='Search Results', form=form)
+    else:
+        if request == 'POST':
+            current_app.logger.error("----------Internal Error: {}----------".format(form.errors))
+            return render_template(VOTE_LIST_PAGE, login=login, title='Search Topics', form=form, votes=all_vote_list, hot_votes=hot_votes, error=INTERNAL_ERROR_MSG), 500
+
+    return render_template(VOTE_LIST_PAGE, login=login, title='Search Topics', form=form, votes=all_vote_list, hot_votes=hot_votes)
 
 
 @votes.route('/listmyvotes', methods=['GET'])
 def list_my_vote():
     if 'username' not in session:
-        return redirect(url_for('users.login'))
+        login_form = userService.LoginForm()
+        error = "To see your vote topics, you need to login to your account first!"
+        return render_template(LOGIN_PAGE, title='Login', form=login_form, error=error)
     posted_votes = voteService.list_posted_votes(session['username'])
     voted_votes = voteService.list_voted_votes(session['username'])
     return render_template(MY_VOTE_LIST_PAGE, title='List My Vote', votesPosted=posted_votes, votesVoted=voted_votes)
 
-@votes.route('/votes.detail/<vote_id>/<vote_create_time>', methods=['GET','POST'])
+
+@votes.route('/votes.detail/<vote_id>/<vote_create_time>', methods=['GET', 'POST'])
 def vote_details(vote_id, vote_create_time):
     # post = voteService.list_specific_vote(vote_id, vote_create_time)
     post = voteService.list_specific_vote(vote_id)
@@ -67,7 +80,6 @@ def vote_details(vote_id, vote_create_time):
         ID = voteService.list_voted_IDS(username)
         if vote_id in ID:
             return redirect(url_for('votes.vote_results', vote_id=vote_id, vote_create_time=vote_create_time))
-
 
     post_topic = post["topic"]
     options = post["options"]
@@ -85,7 +97,9 @@ def vote_details(vote_id, vote_create_time):
 
     if request.method == 'POST':
         if 'username' not in session:
-            return redirect(url_for('users.login'))
+            login_form = userService.LoginForm()
+            error = "To involve in a vote, you need to login to your account first!"
+            return render_template(LOGIN_PAGE, title='Login', form=login_form, error=error)
         num = int(request.form.get('name'))
 
         username = session['username']
@@ -94,7 +108,6 @@ def vote_details(vote_id, vote_create_time):
         if vote_id in ID:
             return redirect(url_for('votes.vote_results', vote_id=vote_id, vote_create_time=vote_create_time))
         else:
-            #voteService.vote_update(vote_id, vote_create_time, num)
             voteService.vote_update(vote_id, num)
             userService.update_user_votes(username, vote_id)
             return redirect(url_for('votes.vote_results', vote_id=vote_id,vote_create_time=vote_create_time))
@@ -110,12 +123,11 @@ def vote_results(vote_id, vote_create_time):
         return redirect(url_for('votes.vote_details', vote_id = vote_id, vote_create_time = vote_create_time))
 
     post = voteService.list_specific_vote(vote_id)
-    #post = voteService.list_specific_vote(vote_id, vote_create_time)
     username = session['username']
-    IDs = voteService.list_voted_IDS(username)
+    ids = voteService.list_voted_IDS(username)
 
-    if vote_id not in IDs:
-        return redirect(url_for('votes.vote_details', vote_id = vote_id, vote_create_time = vote_create_time))
+    if vote_id not in ids:
+        return redirect(url_for('votes.vote_details', vote_id=vote_id, vote_create_time=vote_create_time))
 
     post_topic = post["topic"]
     options = post["options"]
@@ -138,7 +150,8 @@ def vote_results(vote_id, vote_create_time):
     except IndexError:
         option5 = []
 
-    return render_template('votes.result.html', vote_id=vote_id, vote_create_time=vote_create_time, topic=post_topic, options = options, fractions = fractions,
-                           option1 = option1, option2 = option2, option3 = option3, option4 = option4,
-                           option5 = option5)
+    return render_template('votes.result.html', vote_id=vote_id, vote_create_time=vote_create_time, topic=post_topic,
+                           options=options, fractions=fractions,
+                           option1=option1, option2=option2, option3=option3, option4=option4,
+                           option5=option5)
 

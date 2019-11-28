@@ -12,12 +12,12 @@ class CreateVoteForm(FlaskForm):
     option3 = StringField('* Option 3: ', validators=[validators.DataRequired(), validators.Length(min=2, max=200)])
     option4 = StringField('Option 4: ', validators=[validators.optional(), validators.Length(min=2, max=200)])
     option5 = StringField('Option 5: ', validators=[validators.optional(), validators.Length(min=2, max=200)])
-    valid_days = IntegerField('* vote will close in (days): ', validators=[validators.DataRequired(), validators.NumberRange(min=1, max=365)])
+    valid_days = IntegerField('* vote will be closed in (days): ', validators=[validators.DataRequired(), validators.NumberRange(min=1, max=365)])
 
     submit = SubmitField('Post Vote')
 
 class SearchForm(FlaskForm):
-    vote_topic = StringField('Vote Topic', widget=TextArea(), validators=[validators.DataRequired(), validators.Length(min=1, max=500)])
+    vote_topic = StringField('', widget=TextArea(), validators=[validators.DataRequired(), validators.Length(min=1, max=500)])
     submit = SubmitField('Search')
 
 

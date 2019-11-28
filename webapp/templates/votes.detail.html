@@ -55,27 +55,27 @@ input:checked ~ input:active {
                 <legend class="border-bottom mb-4">{{ topic }}</legend>
                 <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
 {#                    {% for option in options %}#}
-                  <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                  <div class="row" style="padding:2rem">
                         <label class="radio" id="option">
-                            <input type="radio" name="name" value="0" />
+                            <input class="radio" type="radio" name="name" value="0" />
                             <span>{{option1}}</span>
                         </label>
                   </div>
 {#                    {% endfor %}#}
-                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                  <div class="row" style="padding:2rem">
                         <label class="radio" id="option">
                             <input type="radio" name="name" value="1" />
                             <span>{{option2}}</span>
                         </label>
                   </div>
-                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                  <div class="row" style="padding:2rem">
                         <label class="radio" id="option">
                             <input type="radio" name="name" value="2" />
                             <span>{{option3}}</span>
                         </label>
                   </div>
                     {% if option4|length > 0 %}
-                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                  <div class="row" style="padding:2rem">
                         <label class="radio" id="option">
                             <input type="radio" name="name" value="3" />
                             <span>{{option4}}</span>
@@ -83,7 +83,7 @@ input:checked ~ input:active {
                   </div>
                     {% endif %}
                     {% if option5|length > 0 %}
-                    <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                  <div class="row" style="padding:2rem">
                         <label class="radio" id="option">
                             <input type="radio" name="name" value="4"/>
                             <span>{{option5}}</span>
@@ -93,7 +93,7 @@ input:checked ~ input:active {
                 </div>
             </fieldset>
       <br>
-          <input class="btn btn-outline-info btn-dark-blue" type="submit" name="submit" value="Submit"/>
+          <input class="btn btn-outline-info btn-dark-blue" type="submit" name="submit" value="Vote"/>
             <div class="spacer-50"></div>
       </form>
       </div>

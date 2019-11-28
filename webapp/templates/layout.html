@@ -23,16 +23,15 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarToggle">
             <div class="navbar-nav mr-auto">
-              <a class="nav-item nav-link" href="/">Home</a>
+                <a class="nav-item nav-link" href="{{ url_for('votes.list_vote') }}">All Topics</a>
+                <a class="nav-item nav-link" href="{{ url_for('votes.hot_vote') }}">Hot Topics</a>
+                <a class="nav-item nav-link" href="{{ url_for('votes.list_my_vote') }}">My Topics</a>
+
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-{#              <a class="nav-item nav-link" href="{{ url_for('') }}" style="padding-right: 3rem">Do sth here??</a>#}
-            <a class="nav-item nav-link" href="{{ url_for('votes.search_vote') }}">Search</a>
-            <a class="nav-item nav-link" href="{{ url_for('votes.post_vote') }}">Post Vote</a>
-            <a class="nav-item nav-link" href="{{ url_for('votes.list_my_vote') }}">My Vote</a>
-            <a class="nav-item nav-link" href="{{ url_for('votes.list_vote') }}">All Vote</a>
-            <a class="nav-item nav-link" href="{{ url_for('users.logout') }}">Logout</a>
+            <a class="nav-item nav-link" href="{{ url_for('votes.post_vote') }}">Initiate a Vote</a>
+            <a class="nav-item nav-link" style="padding-left: 10%" href="{{ url_for('users.logout') }}">Logout</a>
             </div>
           </div>
         </div>

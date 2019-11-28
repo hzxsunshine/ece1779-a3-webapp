@@ -2,22 +2,10 @@
 {% block content %}
       <div class="spacer-30"></div>
       <section>
-          <div class="row">
-              <div class="col-md-6 align-center">
-                  <a class="btn btn-lg btn-dark-blue" style="width: 50%" href="/listallvotes">
-                        <span>All Votes</span>
-                  </a>
-              </div>
-              <div class="col-md-6 align-center">
-                  <a id="growlink" class="btn btn-lg btn-dark-blue" style="width: 50%" href="/listmyvotes">
-                      <span>My Votes</span>
-                  </a>
-              </div>
-          </div>
-            <div class="spacer-30"></div>
+          <div class="spacer-30"></div>
       {% if votesPosted|length > 0 or votesVoted|length > 0%}
           {% if votesPosted|length > 0 %}
-            <h3>Votes posted:</h3>
+            <h3>Topics posted:</h3>
             <div class="spacer-30"></div>
             <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
                   <ul>
@@ -32,8 +20,8 @@
             </div>
           {% endif %}
           {% if votesVoted|length > 0 %}
-            <div class="spacer-30"></div>
-            <h3>Votes involved in:</h3>
+            <div class="spacer-80"></div>
+            <h3>Topics involved in:</h3>
             <div class="spacer-30"></div>
             <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
                   <ul>

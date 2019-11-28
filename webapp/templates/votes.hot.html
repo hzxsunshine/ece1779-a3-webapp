@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block content %}
+
+    {# search bottom #}
+    {# search block #}
+    {# list of search result #}
+    <div class="spacer-50"></div>
+    {% if hot_votes|length > 0 %}
+        <h3>Hot Topics:</h3>
+        <div class="spacer-30"></div>
+        <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
+              <ul>
+              {% for vote in hot_votes %}
+              <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                    <a class="align-center" href="{{url_for('votes.vote_details',vote_id=vote["id"], vote_create_time=vote["create_time"])}}">
+                          <h4>{{vote["topic"]}}</h4>
+                    </a>
+
+              </div>
+              {% endfor %}
+              </ul>
+        </div>
+    {% endif %}
+
+{% endblock %}

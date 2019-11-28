@@ -1,125 +1,83 @@
-<style>
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  background-color: rgb(0,0,0);
-  background-color: rgba(0,0,0,0.4);
-}
-
-.modal-content {
-  background-color: #fefefe;
-  margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
-}
-
-
-.close {
-  color: #aaa;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.modal-header {
-  padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
-}
-
-.modal-body {padding: 2px 16px;}
-
-.modal-footer {
-  padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
-}
-
-.modal-content {
-  position: relative;
-  background-color: #fefefe;
-  margin: auto;
-  padding: 0;
-  border: 1px solid #888;
-  width: 80%;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
-  animation-name: animatetop;
-  animation-duration: 0.4s
-}
-
-@keyframes animatetop {
-  from {top: -300px; opacity: 0}
-  to {top: 0; opacity: 1}
-}
-</style>
-
 {% extends "layout.html" %}
 {% block content %}
       <div class="spacer-30"></div>
       <section>
-          <div class="row">
-              <div class="col-md-6 align-center">
-                  <a class="btn btn-lg btn-dark-blue" style="width: 50%" href="/listallvotes">
-                        <span>All Votes</span>
-                  </a>
-              </div>
-                {% if (login) %}
-                  <div class="col-md-6 align-center">
-                  <a id="growlink" class="btn btn-lg btn-dark-blue" style="width: 50%" href="/listmyvotes">
-                        <span>My Votes</span>
-                  </a>
+          <div class="spacer-30"></div>
+            <div class="content-section">
+                <form method="POST" action="">
+                  {{ form.csrf_token }}
+                  <fieldset class="form-group">
+                      <legend class="border-bottom mb-4">{{ title }}</legend>
+                      <div class="form-group">
+                          {{ form.vote_topic.label(class="form-control-label") }}
+                          {% if form.vote_topic.errors %}
+                              {{ form.vote_topic(class="form-control form-control-lg is-invalid") }}
+                              <div class="invalid-feedback">
+                                  {% for error in form.vote_topic.errors %}
+                                      <span>{{ error }}</span>
+                                  {% endfor %}
+                              </div>
+                          {% else %}
+                              {{ form.vote_topic(class="form-control form-control-lg") }}
+                          {% endif %}
+                      </div>
+                  </fieldset>
+                  <div class="form-group">
+                      {{ form.submit(class="btn btn-outline-info btn-dark-blue", id="myInput") }}
+                  </div>
+
+                </form>
+                  {% if votesPosted|length > 0 or votesVoted|length > 0%}
+                  <div class="spacer-30"></div>
+                  <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
+                        <ul>
+                        {% for vote in votesPosted %}
+                        <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                              <a class="align-center" href="{{url_for('votes.vote_details',vote_id=vote["id"], vote_create_time=vote["create_time"])}}">
+                                    <h4>{{vote["topic"]}}</h4>
+                              </a>
+                        </div>
+                        {% endfor %}
+                        </ul>
                   </div>
                 {% endif %}
-          </div>
-            <div class="spacer-30"></div>
-      {% if hot_votes|length > 0 %}
-            <h3>Hot Votes:</h3>
-            <div class="spacer-30"></div>
-            <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
-                  <ul>
-                  {% for vote in hot_votes %}
-                  <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
-                        <a class="align-center" href="{{url_for('votes.vote_details',vote_id=vote["id"], vote_create_time=vote["create_time"])}}">
-                              <h4>{{vote["topic"]}}</h4>
-                        </a>
-
-                  </div>
-                  {% endfor %}
-                  </ul>
             </div>
-      {% endif %}
-      {% if votes|length > 0 %}
-            <div class="spacer-30"></div>
-            <h3>All Votes:</h3>
-            <div class="spacer-30"></div>
-            <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
-                  <ul>
-                  {% for vote in votes %}
-                  <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
-                        <a class="align-center" href="{{url_for('votes.vote_details',vote_id=vote["id"], vote_create_time=vote["create_time"])}}">
-                              <h4>{{vote["topic"]}}</h4>
-                        </a>
+          <script>
+          // Get the input field
+          var input = document.getElementById("myInput");
 
-                  </div>
-                  {% endfor %}
-                  </ul>
-            </div>
-      {% else %}
-            <h1 class="mb-4">No votes available! Start posting now! </h1>
-      {% endif %}
+          // Execute a function when the user releases a key on the keyboard
+          input.addEventListener("keyup", function(event) {
+            // Number 13 is the "Enter" key on the keyboard
+            if (event.keyCode === 13) {
+              // Cancel the default action, if needed
+              event.preventDefault();
+              // Trigger the button element with a click
+              document.getElementById("myBtn").click();
+            }
+          });
+          </script>
+
+          <div class="spacer-80"></div>
+
+          {% if votes|length > 0 %}
+                <div class="spacer-30"></div>
+                <h3>Topic List:</h3>
+                <div class="spacer-30"></div>
+                <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
+                      <ul>
+                      {% for vote in votes %}
+                      <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">
+                            <a class="align-center" href="{{url_for('votes.vote_details',vote_id=vote["id"], vote_create_time=vote["create_time"])}}">
+                                  <h4>{{vote["topic"]}}</h4>
+                            </a>
+
+                      </div>
+                      {% endfor %}
+                      </ul>
+                </div>
+          {% else %}
+                <h1 class="mb-4">No votes available! Start posting now! </h1>
+          {% endif %}
     </section>
 {% endblock content %}
