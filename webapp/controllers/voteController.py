@@ -100,6 +100,13 @@ def vote_details(vote_id, vote_create_time):
             login_form = userService.LoginForm()
             error = "To involve in a vote, you need to login to your account first!"
             return render_template(LOGIN_PAGE, title='Login', form=login_form, error=error)
+        if request.form.get('name') is None:
+            error = "You need to select one option!"
+            return render_template('votes.detail.html', vote_id=vote_id, vote_create_time=vote_create_time,
+                                   topic=post_topic,
+                                   options=options,
+                                   option1=option1, option2=option2, option3=option3, option4=option4, option5=option5,
+                                   error=error)
         num = int(request.form.get('name'))
 
         username = session['username']
