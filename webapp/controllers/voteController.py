@@ -134,6 +134,9 @@ def vote_results(vote_id, vote_create_time):
     if 'username' not in session:
         return redirect(url_for('votes.vote_details', vote_id = vote_id, vote_create_time = vote_create_time))
 
+    if request.method == "POST":
+        return redirect(url_for("votes.list_my_vote"))
+
     post = voteService.list_specific_vote(vote_id)
     username = session['username']
     ids = voteService.list_voted_IDS(username)
@@ -143,9 +146,11 @@ def vote_results(vote_id, vote_create_time):
 
     post_topic = post["topic"]
     options = post["options"]
-    sum_all = 0
+    sum_all = 0# post["num_voted"]
     for i in range(len(options)):
         sum_all += int(options[i]['counts']) * 0.01
+
+    totalvotes = int(sum_all * 100)
     fractions = []
     for i in range(len(options)):
         fractions.append(int(int(options[i]['counts'])/sum_all * 100 + 0.5)/ 100.0)
@@ -163,7 +168,7 @@ def vote_results(vote_id, vote_create_time):
         option5 = []
 
     return render_template('votes.result.html', vote_id=vote_id, vote_create_time=vote_create_time, topic=post_topic,
-                           options=options, fractions=fractions,
+                           options=options, fractions=fractions, totalvotes = totalvotes,
                            option1=option1, option2=option2, option3=option3, option4=option4,
                            option5=option5)
 
