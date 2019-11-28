@@ -61,14 +61,20 @@ def search_votes(search_form):
     keyword = re.sub('  ', " ", re.sub("[\u0060|\u0021-\u002c|\u002e-\u002f|\u003a-\u003f|\u2200-\u22ff|\uFB00-\uFFFD|\u2E80-\u33FF]",
                                        ' ', keywords)).split(' ')
     filter_expression_list = []
-    Attr("topic").contains("test"), Attr("topic").contains("how")
-    for i in range(len(keyword)):
-        filter_expression_list.append(Attr("topic").contains("{}".format(keyword[i])))
+
+    while("" in keyword):
+        keyword.remove("")
+
 
     if len(keyword) > 1:
+        for i in range(len(keyword)):
+            filter_expression_list.append(Attr("topic").contains("{}".format(keyword[i])))
+
         expression = Or(*filter_expression_list)
-    else:
+    elif len(keyword) == 1:
         expression = Attr("topic").contains("{}".format(keyword[0]))
+    else:
+        return False
 
     results = dynamodb.tables['votes'].scan(
         FilterExpression = expression

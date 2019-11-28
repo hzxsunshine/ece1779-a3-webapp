@@ -49,6 +49,11 @@ def list_vote():
     form = voteService.SearchForm()
     if form.validate_on_submit():
         results = voteService.search_votes(search_form=form)
+        if results == False:
+            message = "Invalid search word"
+            return render_template(VOTE_LIST_PAGE, login=login, title="Search Topics",
+                                   form=form, votes=all_vote_list, hot_votes=hot_votes, votesPosted=[],
+                                   message=message)  # render_template(VOTE_CREATION_PAGE, title='Search Results', form=form)
         message = str(len(results)) + ' result found from searching!'
         return render_template(VOTE_LIST_PAGE, login=login, title="Search Topics",
                                form=form, votes=all_vote_list, hot_votes=hot_votes, votesPosted=results, message=message)  # render_template(VOTE_CREATION_PAGE, title='Search Results', form=form)
