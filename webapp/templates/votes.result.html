@@ -18,7 +18,7 @@
 
 {#                  <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">#}
                 <br>
-                <div><h6><span class="right">Votes: {{ option1['counts'] }}</span><span class="left">{{ option1['content'] }} :</span></h6></div>
+                <div><h6><span class="right">{{ option1['counts'] }} Votes</span><span class="left">{{ option1['content'] }} :</span></h6></div>
                 <br>
                 <div class="progress" style="height: 40px">
                   <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[0] }}%">
@@ -26,14 +26,14 @@
                   </div>
                 </div>
                 <br>
-                <div><h6><span class="right">Votes: {{ option2['counts'] }}</span><span class="left">{{ option2['content'] }} :</span></h6></div>
+                <div><h6><span class="right">{{ option2['counts'] }} Votes</span><span class="left">{{ option2['content'] }} :</span></h6></div>
                 <br>
                 <div class="progress" style="height: 40px">
                   <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[1] }}%">
                     {{ fractions[1] }}%
                   </div>
                 </div>
-                <br><div><h6><span class="right">Votes: {{ option3['counts'] }}</span><span class="left">{{ option3['content'] }} :</span></h6></div>
+                <br><div><h6><span class="right">{{ option3['counts'] }} Votes</span><span class="left">{{ option3['content'] }} :</span></h6></div>
 
                 <br>
                 <div class="progress" style="height: 40px">
@@ -43,7 +43,7 @@
                 </div>
                 <br>
                     {% if option4|length > 0 %}
-                <div><h6><span class="right">Votes: {{ option4['counts'] }}</span><span class="left">{{ option4['content'] }} :</span></h6></div>
+                <div><h6><span class="right">{{ option4['counts'] }} Votes</span><span class="left">{{ option4['content'] }} :</span></h6></div>
                 <br>
                 <div class="progress" style="height: 40px">
                   <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[3] }}%">
@@ -54,7 +54,7 @@
                     {% endif %}
 
                     {% if option5|length > 0 %}
-                <div><h6><span class="right">Votes: {{ option5['counts'] }}</span><span class="left">{{ option5['content'] }} :</span></h6></div>
+                <div><h6><span class="right">{{ option5['counts'] }} Votes</span><span class="left">{{ option5['content'] }} :</span></h6></div>
                 <br>
                 <div class="progress" style="height: 40px">
                   <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[4] }}%">
@@ -64,7 +64,7 @@
                     <br>
                     {% endif %}
                 <div>
-                    <h6><span class="right">Total Participates: {{ totalvotes }} </span></h6>
+                    <h6><span class="right">Total: {{ totalvotes }} Participants </span></h6>
                     <a class="btn btn-outline-info btn-dark-blue" href="{{ url_for("votes.list_my_vote") }}">Back</a>
                 </div>
                 <br>
