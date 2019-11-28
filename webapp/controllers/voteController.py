@@ -117,12 +117,12 @@ def vote_details(vote_id, vote_create_time):
         username = session['username']
         ID = voteService.list_voted_IDS(username)
 
-        if vote_id in ID:
-            return redirect(url_for('votes.vote_results', vote_id=vote_id, vote_create_time=vote_create_time))
-        else:
-            voteService.vote_update(vote_id, num)
-            userService.update_user_votes(username, vote_id)
-            return redirect(url_for('votes.vote_results', vote_id=vote_id,vote_create_time=vote_create_time))
+        # if vote_id in ID:
+        #     return redirect(url_for('votes.vote_results', vote_id=vote_id, vote_create_time=vote_create_time))
+        # else:
+        voteService.vote_update(vote_id, num)
+        userService.update_user_votes(username, vote_id)
+        return redirect(url_for('votes.vote_results', vote_id=vote_id,vote_create_time=vote_create_time))
 
     return render_template('votes.detail.html', vote_id=vote_id, vote_create_time=vote_create_time, topic=post_topic, options=options,
                            option1 = option1, option2 = option2, option3 = option3, option4 = option4,
