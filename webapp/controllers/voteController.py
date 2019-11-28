@@ -115,7 +115,7 @@ def vote_details(vote_id, vote_create_time):
         num = int(request.form.get('name'))
 
         username = session['username']
-        ID = voteService.list_voted_IDS(username)
+        # ID = voteService.list_voted_IDS(username)
 
         # if vote_id in ID:
         #     return redirect(url_for('votes.vote_results', vote_id=vote_id, vote_create_time=vote_create_time))
