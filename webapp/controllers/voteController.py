@@ -20,8 +20,10 @@ def post_vote():
         return render_template(LOGIN_PAGE, title='Login', form=login_form, error=error)
     form = voteService.CreateVoteForm()
     if form.validate_on_submit():
+        username = session['username']
         vote_id = voteService.create_vote(username=session['username'], vote_form=form)
         message = "Vote with id : " + vote_id + " has been initiated successfully!"
+        userService.update_user_votes(username, vote_id)
         return render_template(VOTE_CREATION_PAGE, title='Post Vote', form=form, message=message)
     else:
         if request == 'POST':
@@ -152,8 +154,12 @@ def vote_results(vote_id, vote_create_time):
 
     totalvotes = int(sum_all * 100)
     fractions = []
-    for i in range(len(options)):
-        fractions.append(int(int(options[i]['counts'])/sum_all * 100 + 0.5)/ 100.0)
+    if sum_all == 0:
+        for i in range(len(options)):
+            fractions.append(0)
+    else:
+        for i in range(len(options)):
+            fractions.append(int(int(options[i]['counts'])/sum_all * 100 + 0.5)/ 100.0)
 
     option1 = options[0] # option1
     option2 = options[1] # option2
