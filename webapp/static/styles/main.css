@@ -249,7 +249,14 @@ h4{
   color: #5f788a !important;
 }
 
+.card-body .row{
+  border-bottom-style: inset;
+  margin-bottom: 0.5rem;
+}
 
-
+.card-body{
+  max-height: 500px;
+  overflow: scroll;
+}
 
 

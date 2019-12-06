@@ -8,69 +8,121 @@
 }</style>
 {% extends "layout.html" %}
 {% block content %}
-      <div class="spacer-30"></div>
-      <div class="content-section">
-      <form method="POST" action="{{ url_for('votes.vote_details', vote_id = vote_id, vote_create_time=vote_create_time) }}">
-                <legend class="border-bottom mb-4">
-                    <h4>{{ topic }}</h4>
-                </legend>
-                <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
+  <div class="spacer-30"></div>
+  <div class="content-section">
+  <form method="POST" action="{{ url_for('votes.vote_details', vote_id = vote_id, vote_create_time=vote_create_time) }}">
+            <legend class="border-bottom mb-4">
+                <h4>{{ topic }}</h4>
+            </legend>
+            <div class="container bg-white shadow rounded-lg" style="opacity: 0.92">
 
 {#                  <div class="row" style="padding-top: 1.5rem; padding-bottom: 1.5rem">#}
-                <br>
-                <div><h6><span class="right">{{ option1['counts'] }} Votes</span><span class="left">{{ option1['content'] }} :</span></h6></div>
-                <br>
-                <div class="progress" style="height: 40px">
-                  <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[0] }}%">
-                      {{ fractions[0] }}%
-                  </div>
-                </div>
-                <br>
-                <div><h6><span class="right">{{ option2['counts'] }} Votes</span><span class="left">{{ option2['content'] }} :</span></h6></div>
-                <br>
-                <div class="progress" style="height: 40px">
-                  <div class="progress-bar bg-success progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[1] }}%">
-                    {{ fractions[1] }}%
-                  </div>
-                </div>
-                <br><div><h6><span class="right">{{ option3['counts'] }} Votes</span><span class="left">{{ option3['content'] }} :</span></h6></div>
+            <br>
+            <div><h6><span class="right">{{ option1['counts'] }} Votes</span><span class="left">{{ option1['content'] }} :</span></h6></div>
+            <br>
+            <div class="progress" style="height: 40px">
+              <div class="progress-bar bg-primary progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[0] }}%">
+                  {{ fractions[0] }}%
+              </div>
+            </div>
+            <br>
+            <div><h6><span class="right">{{ option2['counts'] }} Votes</span><span class="left">{{ option2['content'] }} :</span></h6></div>
+            <br>
+            <div class="progress" style="height: 40px">
+              <div class="progress-bar bg-success progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[1] }}%">
+                {{ fractions[1] }}%
+              </div>
+            </div>
+            <br><div><h6><span class="right">{{ option3['counts'] }} Votes</span><span class="left">{{ option3['content'] }} :</span></h6></div>
 
+            <br>
+            <div class="progress" style="height: 40px">
+              <div class="progress-bar bg-info progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[2] }}%">
+                {{ fractions[2] }}%
+              </div>
+            </div>
+            <br>
+                {% if option4|length > 0 %}
+            <div><h6><span class="right">{{ option4['counts'] }} Votes</span><span class="left">{{ option4['content'] }} :</span></h6></div>
+            <br>
+            <div class="progress" style="height: 40px">
+              <div class="progress-bar bg-warning progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[3] }}%">
+                {{ fractions[3] }}%
+              </div>
+            </div>
                 <br>
-                <div class="progress" style="height: 40px">
-                  <div class="progress-bar bg-info progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[2] }}%">
-                    {{ fractions[2] }}%
-                  </div>
-                </div>
-                <br>
-                    {% if option4|length > 0 %}
-                <div><h6><span class="right">{{ option4['counts'] }} Votes</span><span class="left">{{ option4['content'] }} :</span></h6></div>
-                <br>
-                <div class="progress" style="height: 40px">
-                  <div class="progress-bar bg-warning progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[3] }}%">
-                    {{ fractions[3] }}%
-                  </div>
-                </div>
-                    <br>
-                    {% endif %}
+                {% endif %}
 
-                    {% if option5|length > 0 %}
-                <div><h6><span class="right">{{ option5['counts'] }} Votes</span><span class="left">{{ option5['content'] }} :</span></h6></div>
+                {% if option5|length > 0 %}
+            <div><h6><span class="right">{{ option5['counts'] }} Votes</span><span class="left">{{ option5['content'] }} :</span></h6></div>
+            <br>
+            <div class="progress" style="height: 40px">
+              <div class="progress-bar bg-danger progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[4] }}%">
+                {{ fractions[4] }}%
+              </div>
+            </div>
                 <br>
-                <div class="progress" style="height: 40px">
-                  <div class="progress-bar bg-danger progress-bar-striped progress-bar-animated" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: {{ fractions[4] }}%">
-                    {{ fractions[4] }}%
-                  </div>
+                {% endif %}
+            <div>
+                <h6><span class="right">Total: {{ totalvotes }} Participants </span></h6>
+                <a class="btn btn-outline-info btn-dark-blue" href="{{ url_for("votes.list_my_vote") }}">Back</a>
+            </div>
+            <br>
+            <br>
+            </div>
+        <div class="spacer-50"></div>
+  </form>
+  </div>
+  <div class="content-section">
+    <form method="POST" action="{{ url_for('votes.post_comment', vote_id = vote_id, vote_create_time=vote_create_time) }}">
+      {{ comment_form.csrf_token }}
+      <fieldset class="form-group">
+        <div class="form-group">
+            {{ comment_form.comment.label(class="form-control-label") }}
+            {% if comment_form.comment.errors %}
+                {{ comment_form.comment(class="form-control form-control-lg is-invalid") }}
+                <div class="invalid-feedback">
+                    {% for error in comment_form.comment.errors %}
+                        <span>{{ error }}</span>
+                    {% endfor %}
                 </div>
-                    <br>
-                    {% endif %}
-                <div>
-                    <h6><span class="right">Total: {{ totalvotes }} Participants </span></h6>
-                    <a class="btn btn-outline-info btn-dark-blue" href="{{ url_for("votes.list_my_vote") }}">Back</a>
-                </div>
-                <br>
-                <br>
-                </div>
-            <div class="spacer-50"></div>
-      </form>
+            {% else %}
+                {{ comment_form.comment(class="form-control form-control-lg") }}
+            {% endif %}
+        </div>
+      </fieldset>
+
+      <div class="form-group">
+        {{ comment_form.submit(class="btn btn-outline-info btn-dark-blue") }}
       </div>
+  </div>
+
+  <div calss="content-section">
+  <div class="card">
+    <div class="card-body">
+        <h4>Comments:</h4>
+        {% for comment in comments %}
+        <div class="row">
+            <div class="col-md-1">
+                <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid"/>
+            </div>
+            <div class="col-md-10">
+                <p>
+                    <strong>{{comment["username"]}}</strong> commented:
+                    <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                      <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                    <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                    <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+
+               </p>
+               <div class="clearfix"></div>
+                <p>{{comment["comment"]}}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+  </div> 
+  </div>
+  <div class="spacer-50"></div>
+  </div>
 {% endblock content %}

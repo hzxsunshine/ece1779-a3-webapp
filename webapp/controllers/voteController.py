@@ -173,8 +173,28 @@ def vote_results(vote_id, vote_create_time):
     except IndexError:
         option5 = []
 
-    return render_template('votes.result.html', vote_id=vote_id, vote_create_time=vote_create_time, topic=post_topic,
-                           options=options, fractions=fractions, totalvotes = totalvotes,
-                           option1=option1, option2=option2, option3=option3, option4=option4,
-                           option5=option5)
+    #Comments    
+    comments = post["comments"]
+    comments.reverse()
+    comment_form = voteService.CreateCommentForm()
+
+    return render_template('votes.result.html', 
+        vote_id=vote_id, 
+        vote_create_time=vote_create_time, 
+        topic=post_topic,
+        options=options, 
+        fractions=fractions, 
+        totalvotes = totalvotes,
+        option1=option1, option2=option2, option3=option3, option4=option4, option5=option5,
+        comments=comments,
+        comment_form=comment_form)
+
+@votes.route('/post_comment/<vote_id>/<vote_create_time>', methods=['POST'])
+def post_comment(vote_id, vote_create_time):
+    if 'username' not in session:
+        return redirect(url_for('votes.vote_details', vote_id = vote_id, vote_create_time = vote_create_time))
+    username = session["username"]
+    response = voteService.post_comment(vote_id, username, request.form["comment"])
+
+    return redirect(url_for('votes.vote_results', vote_id=vote_id,vote_create_time=vote_create_time))
 

@@ -16,6 +16,10 @@ class CreateVoteForm(FlaskForm):
 
     submit = SubmitField('Post Vote')
 
+class CreateCommentForm(FlaskForm):
+    comment = StringField('Leave Your Comment:', widget=TextArea(), validators=[validators.DataRequired(), validators.Length(min=2, max=500)])
+    submit = SubmitField('Comment')
+
 class SearchForm(FlaskForm):
     vote_topic = StringField('', validators=[validators.DataRequired(), validators.Length(min=1, max=500)])
     submit = SubmitField('Search')
@@ -55,3 +59,6 @@ def vote_update(vote_id,option_id):
 
 def list_voted_IDS(username):
     return voteRepository.list_voted_ID(username)
+
+def post_comment(vote_id, username, comment):
+    return voteRepository.post_comment(vote_id, username, comment)

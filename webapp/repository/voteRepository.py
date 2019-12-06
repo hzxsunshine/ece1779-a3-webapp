@@ -27,6 +27,8 @@ def create_vote(username, vote_form):
         options.append(dict(content=vote_form.option5.data, counts=0))
 
     vote_id = str(uuid.uuid4())
+
+    comments = []
     dynamodb = current_app.extensions['dynamo']
     dynamodb.tables['votes'].put_item(
       Item={
@@ -36,7 +38,8 @@ def create_vote(username, vote_form):
         'topic': vote_form.vote_topic.data,
         'options': options,
         'valid_days': vote_form.valid_days.data,
-        'num_voted': 0
+        'num_voted': 0,
+        'comments' : comments
       })
     return vote_id
 
@@ -173,6 +176,17 @@ def update_vote(vote_id, option_id):
         }
     )
 
+def post_comment(vote_id, username, comment):
+    dynamodb = current_app.extensions['dynamo']
+    dynamodb.tables['votes'].update_item(
+        Key={
+            'id': vote_id,
+        },
+        UpdateExpression="SET comments = list_append(comments, :comment)",
+        ExpressionAttributeValues={
+            ':comment' : [dict(username=username, comment=comment)]
+        }
+    )
 
 def sort_votes(votes):
     return sorted(votes, key = lambda i: i['create_time'], reverse = True)
